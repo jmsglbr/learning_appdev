@@ -1,6 +1,6 @@
 // Supabase Configuration
 // !!! REPLACE THESE WITH YOUR ACTUAL SUPABASE VALUES !!!
-const SUPABASE_URL = "https://ouzgznmfzvznntsprtui.supabase.co";
+const SUPABASE_URL = "https://ouzgzmnfzvznntsprtui.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_SAsy_3BXseQOmdZ-6wYClg_icuK5U3X";  // ← PUT YOUR REAL KEY HERE!
 
 // Initialize Supabase client (ONLY ONCE)
