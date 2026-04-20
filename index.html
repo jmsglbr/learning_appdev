@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="description" content="AppDev - Learn Application Development through interactive challenges">
+    <title>AppDev | Learn App Development</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📱</text></svg>">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="loading-overlay">
+    <div class="spinner"></div>
+    <p>Loading AppDev...</p>
+</div>
+
+<!-- Toast Notification Container -->
+<div id="toastContainer" class="toast-container"></div>
+
+<!-- ==================== AUTH SCREEN ==================== -->
+<div id="authScreen" class="auth-screen">
+    <div class="auth-bg"></div>
+    <div class="auth-container">
+        <div class="auth-logo">
+            <span class="logo-icon">📱</span>
+            <h1>App<span>Dev</span></h1>
+        </div>
+        <p class="auth-tagline">Learn Application Development • Interactive • Free</p>
+        
+        <!-- Tab Navigation -->
+        <div class="auth-tabs">
+            <button class="auth-tab active" data-tab="login">🔐 Login</button>
+            <button class="auth-tab" data-tab="register">🚀 Register</button>
+        </div>
+        
+        <!-- Login Form -->
+        <div id="loginForm" class="auth-form active">
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="loginEmail" placeholder="Email address">
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="loginPassword" placeholder="Password">
+            </div>
+            <button id="loginBtn" class="auth-btn">Login →</button>
+        </div>
+        
+        <!-- Register Form -->
+        <div id="registerForm" class="auth-form">
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" id="regUsername" placeholder="Username">
+            </div>
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="regEmail" placeholder="Email address">
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="regPassword" placeholder="Password (min 6 characters)">
+            </div>
+            <button id="registerBtn" class="auth-btn">Create Account →</button>
+        </div>
+        
+        <div id="authMessage" class="auth-message"></div>
+    </div>
+</div>
+
+<!-- ==================== MAIN APP SCREEN ==================== -->
+<div id="mainApp" class="main-app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <span>📱</span>
+                <span>App<span>Dev</span></span>
+            </div>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" data-nav="dashboard">
+                <i class="fas fa-th-large"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="nav-item" data-nav="rooms">
+                <i class="fas fa-cube"></i>
+                <span>Learning Rooms</span>
+            </a>
+            <a href="#" class="nav-item" data-nav="leaderboard">
+                <i class="fas fa-trophy"></i>
+                <span>Leaderboard</span>
+            </a>
+            <a href="#" class="nav-item" data-nav="profile">
+                <i class="fas fa-user-circle"></i>
+                <span>My Profile</span>
+            </a>
+            <a href="#" class="nav-item" data-nav="terminal">
+                <i class="fas fa-terminal"></i>
+                <span>Terminal</span>
+            </a>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <div class="user-badge" id="sidebarUserBadge">
+                <div class="user-avatar" id="userAvatar">👨‍💻</div>
+                <div class="user-info-sidebar">
+                    <span id="sidebarUsername">User</span>
+                    <span id="sidebarXP">0 XP</span>
+                </div>
+            </div>
+            <button id="logoutBtnSidebar" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </button>
+        </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard View -->
+        <div id="dashboardView" class="view active">
+            <div class="welcome-header">
+                <h1>Welcome back, <span id="welcomeUsername">Learner</span>!</h1>
+                <p>Continue your journey to become an App Development expert</p>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="dashboardXP">0</span>
+                        <span class="stat-label">Total XP</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="dashboardTasks">0</span>
+                        <span class="stat-label">Tasks Completed</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📚</div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="dashboardRooms">0</span>
+                        <span class="stat-label">Rooms Started</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="dashboardLevel">1</span>
+                        <span class="stat-label">Current Level</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section-header">
+                <h2>Continue Learning</h2>
+                <button class="view-all-btn" onclick="navigateTo('rooms')">View All Rooms →</button>
+            </div>
+            <div id="featuredRooms" class="featured-rooms"></div>
+            
+            <div class="section-header">
+                <h2>Recent Activity</h2>
+            </div>
+            <div id="recentActivity" class="activity-timeline"></div>
+        </div>
+        
+        <!-- Rooms View -->
+        <div id="roomsView" class="view">
+            <div class="view-header">
+                <h1><i class="fas fa-cube"></i> Learning Rooms</h1>
+                <p>Complete all tasks to earn XP and unlock achievements</p>
+            </div>
+            <div id="roomsGrid" class="rooms-grid"></div>
+        </div>
+        
+        <!-- Room Detail View (hidden initially) -->
+        <div id="roomDetailView" class="view">
+            <button id="backToRoomsBtn" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Back to Rooms
+            </button>
+            <div id="roomDetailContent"></div>
+        </div>
+        
+        <!-- Leaderboard View -->
+        <div id="leaderboardView" class="view">
+            <div class="view-header">
+                <h1><i class="fas fa-trophy"></i> Global Leaderboard</h1>
+                <p>Top learners around the world</p>
+            </div>
+            <div class="leaderboard-container">
+                <div id="leaderboardList" class="leaderboard-list"></div>
+            </div>
+        </div>
+        
+        <!-- Profile View -->
+        <div id="profileView" class="view">
+            <div class="view-header">
+                <h1><i class="fas fa-user-circle"></i> My Profile</h1>
+            </div>
+            <div id="profileContent"></div>
+        </div>
+        
+        <!-- Terminal View -->
+        <div id="terminalView" class="view">
+            <div class="view-header">
+                <h1><i class="fas fa-terminal"></i> Interactive Terminal</h1>
+                <p>Practice Linux/DevOps commands in a safe environment</p>
+            </div>
+            <div class="terminal-window">
+                <div class="terminal-header">
+                    <span class="terminal-dot red"></span>
+                    <span class="terminal-dot yellow"></span>
+                    <span class="terminal-dot green"></span>
+                    <span class="terminal-title">learner@appdev:~</span>
+                </div>
+                <div class="terminal-body" id="terminalOutput">
+                    <div class="terminal-line">$ Welcome to AppDev Terminal</div>
+                    <div class="terminal-line">$ Try commands like: git --version, npm init, python --help</div>
+                    <div class="terminal-line">$ Type 'help' to see available commands</div>
+                </div>
+                <div class="terminal-input-line">
+                    <span class="terminal-prompt">$</span>
+                    <input type="text" id="terminalInput" placeholder="type your command here..." autocomplete="off">
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Scripts -->
+<script src="js/supabase.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
