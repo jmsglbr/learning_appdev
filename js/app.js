@@ -1,34 +1,37 @@
 // Main Application Initialization
 
-async function initializeApp() {
-  showLoading(true);
-
-  await loadProgress();
-  await renderRooms();
-  await loadDashboardStats();
-
-  initNavigation();
-  initTerminal();
-
-  showLoading(false);
-  showToast("Ready to learn! Choose a room to start.", "info");
-}
+window.initializeApp = async function() {
+    showLoading(true);
+    
+    try {
+        await loadProgress();
+        if (typeof renderRooms === 'function') await renderRooms();
+        if (typeof loadDashboardStats === 'function') await loadDashboardStats();
+        
+        if (typeof initNavigation === 'function') initNavigation();
+        if (typeof initTerminal === 'function') initTerminal();
+        
+        showToast('Ready to learn! Choose a room to start.', 'info');
+    } catch (error) {
+        console.error('Initialize error:', error);
+        showToast('Error loading data. Please refresh.', 'error');
+    } finally {
+        showLoading(false);
+    }
+};
 
 // Load all necessary data
-async function loadAllData() {
-  await loadProgress();
-  await renderRooms();
-  await loadDashboardStats();
-}
+window.loadAllData = async function() {
+    await loadProgress();
+    if (typeof renderRooms === 'function') await renderRooms();
+    if (typeof loadDashboardStats === 'function') await loadDashboardStats();
+};
 
-// Export functions to global scope
-window.openRoom = openRoom;
-window.checkTask = checkTask;
-window.navigateTo = navigateTo;
-window.showToast = showToast;
+// Make sure these are available globally
+window.currentUser = currentUser;
+window.currentRoom = currentRoom;
+window.allRooms = allRooms;
+window.userProgress = userProgress;
+window.allTasks = allTasks;
 
-// Initial load when DOM is ready
-document.addEventListener("DOMContentLoaded", () => {
-  // Auth is handled in auth.js
-  console.log("DevHackMe initialized");
-});
+console.log('AppDev initialized');
